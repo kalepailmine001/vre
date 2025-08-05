@@ -6,7 +6,7 @@ on:
 jobs:
   frosti-bot:
     name: Run frosti-bot in parallel
-    runs-on: macos-latest
+    runs-on: ubuntu-latest
     strategy:
       matrix:
         job_id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
@@ -19,6 +19,10 @@ jobs:
         with:
           node-version: 20
 
+      - name: Install xvfb
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
+
       - name: Install dependencies
         run: npm install playwright
 
@@ -26,4 +30,4 @@ jobs:
         run: npx playwright install chrome
 
       - name: Run rev.js (Job ${{ matrix.job_id }})
-        run: node rev.js
+        run: xvfb-run --auto-servernum --server-args="-screen 0 1024x768x24" node rev.js
