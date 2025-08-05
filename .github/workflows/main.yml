@@ -1,0 +1,29 @@
+name: Frosti Parallel Bot
+
+on:
+  workflow_dispatch:
+
+jobs:
+  frosti-bot:
+    name: Run frosti-bot in parallel
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        job_id: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm install playwright
+
+      - name: Install Chrome for Playwright
+        run: npx playwright install chrome
+
+      - name: Run rev.js (Job ${{ matrix.job_id }})
+        run: node rev.js
